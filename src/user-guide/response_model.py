@@ -1,71 +1,58 @@
-from typing import Annotated, Any
+from typing import Any
 
+from fastapi import FastAPI, Response
+from fastapi.responses import JSONResponse, RedirectResponse
 from pydantic import BaseModel, EmailStr
-from fastapi import FastAPI
 
 app = FastAPI()
 
-class BaseUser(BaseModel):
-    username: str
-    email: EmailStr
-    full_name: str | None = None
+class Item(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    tax: float = 10.5
 
 
-class UserIn(BaseUser):
-    password: str
+items = {
+    "foo": {"name": "Foo", "price": 50.2},
+    "bar": {"name": "Bar", "description": "The Bar fighters", "price": 62, "tax": 20.2},
+    "baz": {
+        "name": "Baz",
+        "description": "There goes my baz",
+        "price": 50.2,
+        "tax": 10.5,
+    },
+}
 
 
-@app.post("/user/")
-async def create_user(user: UserIn) -> BaseUser:
-    return user
+@app.get(
+    "/items/{item_id}/name",
+    response_model=Item,
+    response_model_include={"name", "description"},
+)
+async def read_item_name(item_id: str):
+    return items[item_id]
+
+
+@app.get("/items/{item_id}/public", response_model=Item, response_model_exclude={"tax"})
+async def read_item_public_data(item_id: str):
+    return items[item_id]
 
 
 
 
 
-#BaseUser has the base fields. Then UserIn inherits from BaseUser and adds the password field, so, it will include all the fields from both models.
+# #there can be 2 types - response_model
 
-#We annotate the function return type as BaseUser, but we are actually returning a UserIn instance.
-
-#The editor, mypy, and other tools won't complain about this because, in typing terms, UserIn is a subclass of BaseUser, which means it's a valid type when what is expected is anything that is a BaseUser.
-
-
-# class UserIn(BaseModel):
-#     username: str
-#     password: str 
-#     email: EmailStr
-#     full_name: str | None = None
-
-# class UserOut(BaseModel):
-#     username: str
-#     email: EmailStr
-#     full_name: str | None = None
-
-# @app.post("/user/", response_model=UserOut)
-# async def create_user(user: UserIn) -> Any:
-#     return user
-
-# class Item(BaseModel):
-#     name: str
-#     description: str | None = None
-#     price: float
-#     tax: float | None = None
-#     tags: list[str] = []
-
-
-# Don't do this in production!
-# @app.post("/user/")
-# async def create_user(user: UserIn) -> UserIn:
-#     return user
-
-
+# #1st. Pydantic model
 # @app.post("/items/", response_model=Item)
-# async def create_item(item: Item) -> Any:
+# async def create_items(item: Item) -> Any:
 #     return item
 
+# #2nd. Lists of Pydantic model
 # @app.get("/items/", response_model=list[Item])
-# async def read_item() -> Any:
+# async def read_items() -> Any:
 #     return [
-#         Item(name="Portal Gun", price=42.0),
-#         Item(name="Plumbus", price=32.0),
+#         {"name": "Portal Gun", "price": 42.0},
+#         {"name": "Plumbus", "price": 32.0},
 #     ]
