@@ -61,6 +61,15 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         )
     return user
 
+#  UserInDB(**user_dict) means ... :
+# UserInDB(
+#     username = user_dict["username"],
+#     email = user_dict["email"],
+#     full_name = user_dict["full_name"],
+#     disabled = user_dict["disabled"],
+#     hashed_password = user_dict["hashed_password"],
+# )
+
 
 async def get_current_activate_user(
         current_user: Annotated[User, Depends(get_current_user)],
@@ -75,7 +84,7 @@ async def create_items(form_data: Annotated[OAuth2PasswordRequestForm, Depends()
     user_dict = fake_users_db.get(form_data.username)
     if not user_dict:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
-    user=UserInDB(**user_dict)
+    user=UserInDB(**user_dict) #hasing and where it starts
     hashed_password = fake_hash_password(form_data.password)
     if not hashed_password == user.hashed_password:
         raise HTTPException(status_code=400, status="Incorrect username or pasword")
