@@ -37,7 +37,7 @@ class User(BaseModel):
     full_name: str | None = None
     disabled: bool | None = None
 
-class UserInDB(BaseModel):
+class UserInDB(User):
     hashed_password: str
 
 password_hash = PasswordHash.recommended()
@@ -82,7 +82,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     credentials_exception = HTTPException(
         status_code = status.HTTP_401_UNAUTHORIZED,
-        detail="Count not validate credentials",
+        detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
@@ -94,7 +94,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     except InvalidTokenError:
         raise credentials_exception
     user = get_user(fake_users_db, username=token_data.username)
-    if user in None:
+    if user is None:
         raise credentials_exception
     return user
 
@@ -129,7 +129,7 @@ async def login_for_access_token(
     return Token(access_token=access_token, token_type="bearer")
 
 
-@app.get("/users/me", response_model=User)
+@app.get("/users/me/", response_model=User)
 async def read_users_me(
     current_user: Annotated[User, Depends(get_current_active_user)],
 ):
