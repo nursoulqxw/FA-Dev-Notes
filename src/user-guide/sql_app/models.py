@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 
 from .database import Base
 
-class User(Base):
+class User(Base): # user model in the database, and not the User model in our schema
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True, index=True)
