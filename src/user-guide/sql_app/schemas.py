@@ -12,7 +12,7 @@ class Item(ItemBase):
     owner_id: int
 
     class Config:
-        orm_mode: True
+        orm_mode = True
 
 class UserBase(BaseModel):
     email: str
@@ -25,7 +25,7 @@ class UserCreate(UserBase):
 class User(UserBase): # 
     id: int
     is_active: bool
-    items: list[Item] = Item
+    items: list[Item] = []
     
     class Config:
         orm_mode = True

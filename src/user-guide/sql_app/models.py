@@ -16,11 +16,11 @@ class User(Base): # user model in the database, and not the User model in our sc
 
 #index=True, is anything that want to be able to search the database on
 class Item(Base):
-    __table__ = "items"
+    __tablename__ = "items" #fixec here, instead of the "__table__" it has to be "__tablename__"
 
     id = Column(Integer, primary_key = True, index=True)
     title = Column(String, index=True)
-    desctiption = Column(String, index=True)
+    description = Column(String, index=True)
     owner_id = Column(Integer, ForeignKey("users.id"))
 
     owner = relationship("User", back_populates="items")

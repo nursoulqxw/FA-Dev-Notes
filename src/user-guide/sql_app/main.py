@@ -20,7 +20,7 @@ def get_db():
 def create_user(user: schemas.UserCreate, db:Session = Depends(get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="email already registeres")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="email already registered")
     return crud.create_user(db=db,  user=user)
 
 
@@ -37,3 +37,15 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     return db_user
 
+
+#if we remove {user_id} at the code below, it will be a query parameter
+@app.post("/users/{user_id}/items/", response_model=schemas.Item, status_code=status.HTTP_201_CREATED)
+def create_item_for_user(
+    user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)
+):
+    return crud.create_user_item(db, item=item, user_id=user_id)
+
+@app.get("/items/", response_model=list[schemas.Item])
+def read_items(skip: int = 0, limit: int=100, db: Session = Depends(get_db)):
+    items = crud.get_items(db, skip=skip, limit=limit)
+    return items
