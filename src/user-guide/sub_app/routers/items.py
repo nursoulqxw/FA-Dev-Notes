@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from ..dependencies import get_token_header
 
 
-router = APIRouter(
+router = APIRouter( # we called this router which is in users
     prefix="/items",
     tags=["items"],
     dependencies=[Depends(get_token_header)],
