@@ -4,7 +4,24 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 app = FastAPI()
-
+# app = FastAPI(
+#     title="ChimichangApp",
+#     description=description,
+#     version="0.0.1",
+#     terms_of_service="http://example.com/terms/",
+#     contact=dict(
+#         name="Deadpoolio the Amazing",
+#         url="http://x-force.example.com/contact",
+#         email="dp@x-force.example.com",
+#     ),
+#     license_info=dict(
+#         name="Apache 2.0", url="https://www.apache.org/licenses/LICENSE-2.0.html"
+#     ),
+#     openapi_tags=tags_metadata,
+#     openapi_url="/api/v1/openapi.json",
+#     docs_url="/hello-world",
+#     redoc_url=None,
+# )
 # app.mount("/static", StaticFiles(directory="static"), name="static")
 fake_secret_token = "coneofsilence"
 fake_db = dict(
