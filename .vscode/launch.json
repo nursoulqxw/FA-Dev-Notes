@@ -1,0 +1,32 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "FastAPI Debug",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "user_guide.staticFiles_testing_debugging:app",
+                "--reload",
+                // "--port",
+                // "123"
+
+            ],
+            "cwd": "${workspaceFolder}/src",
+            "console": "integratedTerminal",
+            "jinja": true
+        },
+        {
+            "name": "Debug Pytest",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "args": [
+                "user_guide/test_main.py"
+            ],
+            "cwd": "${workspaceFolder}/src",
+            "console": "integratedTerminal"
+        }
+    ]
+}
